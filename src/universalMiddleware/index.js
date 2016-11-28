@@ -22,7 +22,7 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
 
   // It's possible to disable SSR, which can be useful in development mode.
   // In this case traditional client side only rendering will occur.
-  if (process.env.DISABLE_SSR === 'true') {
+  if (process.env.DISABLE_SSR) {
     if (process.env.NODE_ENV === 'development') {
       console.log('==> Handling react route without SSR');  // eslint-disable-line no-console
     }

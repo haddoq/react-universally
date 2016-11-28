@@ -7,10 +7,10 @@
     "node": "~6.9.1"
   },
   "scripts": {
-    "clean": "node tools/scripts/clean",
-    "development": "node tools/development",
-    "build": "node tools/scripts/build",
-    "analyze": "node tools/scripts/analyze",
+    "clean": "tension clean -c",
+    "development": "tension dev -c",
+    "build": "tension build -c",
+    "analyze": "tension analyze client -c",
     "start": "node build/server",
     "deploy": "node tools/scripts/deploy",
     "lint": "eslint src",
@@ -52,11 +52,9 @@
     "react-helmet": "3.1.0",
     "react-router": "4.0.0-alpha.5",
     "serialize-javascript": "1.3.0",
-    "source-map-support": "0.4.6",
     "uuid": "^3.0.0"
   },
   "devDependencies": {
-    "assets-webpack-plugin": "3.5.0",
     "babel-cli": "6.18.0",
     "babel-core": "6.18.2",
     "babel-eslint": "7.1.0",
@@ -84,20 +82,14 @@
     "flow-typed": "2.0.0",
     "glob": "7.1.1",
     "happypack": "2.2.1",
-    "json-loader": "0.5.4",
-    "md5": "2.2.1",
-    "node-notifier": "4.6.1",
     "react-hot-loader": "3.0.0-beta.6",
     "regenerator-runtime": "0.9.5",
     "rimraf": "2.5.4",
     "style-loader": "0.13.1",
     "sw-precache-webpack-plugin": "0.5.1",
+    "tension": "0.0.1",
     "url-loader": "0.5.7",
-    "webpack": "2.1.0-beta.25",
-    "webpack-bundle-analyzer": "1.4.0",
-    "webpack-dev-middleware": "1.8.4",
-    "webpack-hot-middleware": "2.13.1",
-    "webpack-md5-hash": "0.0.5",
-    "webpack-node-externals": "1.5.4"
+    "wcf": "^0.2.1",
+    "webpack-bundle-analyzer": "^2.1.0"
   }
 }

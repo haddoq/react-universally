@@ -3,7 +3,6 @@
 
 // This grants us source map support, which combined with our webpack source
 // maps will give us nice stack traces.
-import 'source-map-support/register';
 
 import path from 'path';
 import uuid from 'uuid';
@@ -15,6 +14,7 @@ import hpp from 'hpp';
 import helmet from 'helmet';
 import universalMiddleware from './middleware/universalMiddleware';
 import { notEmpty } from '../shared/universal/utils/guards';
+import metafile from '../metafile'
 
 const appRootPath = appRoot.get();
 
@@ -89,7 +89,7 @@ if (process.env.NODE_ENV === 'development') {
   // is used to host our client bundle to our csp config.
   Object.keys(cspConfig.directives).forEach(directive =>
     cspConfig.directives[directive].push(
-      `localhost:${notEmpty(process.env.CLIENT_DEVSERVER_PORT)}`
+      `localhost:${notEmpty(metafile.client.devServer.port)}`
     )
   );
 }
@@ -120,27 +120,26 @@ app.use(compression());
 
 // Configure static serving of our webpack bundled client files.
 app.use(
-  notEmpty(process.env.CLIENT_BUNDLE_HTTP_PATH),
+  notEmpty(metafile.client.publicPath),
   express.static(
-    path.resolve(appRootPath, notEmpty(process.env.BUNDLE_OUTPUT_PATH), './client'),
+    notEmpty(metafile.client.outputPath),
     { maxAge: notEmpty(process.env.CLIENT_BUNDLE_CACHE_MAXAGE) }
   )
 );
-
 // Configure static serving of our "public" root http path static files.
-app.use(express.static(path.resolve(appRootPath, './public')));
+app.use(express.static(metafile.client.staticPath));
 
 // When in production mode, bind our service worker folder so that it can
 // be served.
 // Note: the service worker needs to be available at the http root of your
 // application for the offline support to work.
-if (process.env.NODE_ENV === 'production') {
-  app.use(
-    express.static(
-      path.resolve(appRootPath, notEmpty(process.env.BUNDLE_OUTPUT_PATH), './serviceWorker')
-    )
-  );
-}
+// if (process.env.NODE_ENV === 'production') {
+//   app.use(
+//     express.static(
+//       path.resolve(appRootPath, notEmpty(process.env.BUNDLE_OUTPUT_PATH), './serviceWorker')
+//     )
+//   );
+// }
 
 // The universal middleware for our React application.
 app.get('*', universalMiddleware);
@@ -166,7 +165,8 @@ app.use((err: ?Error, req: $Request, res: $Response, next: NextFunction) => { //
 
 // Create an http listener for our express app.
 const port = parseInt(notEmpty(process.env.SERVER_PORT), 10);
-const listener = app.listen(port, () =>
+const hostname = process.env.SERVER_HOST || 'localhost';
+const listener = app.listen(port, hostname, () =>
   console.log(`Server listening on port ${port}`)
 );
 

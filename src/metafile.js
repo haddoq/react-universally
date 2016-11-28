@@ -1,0 +1,1 @@
+export default __TENSION_METAFILE__

@@ -2,23 +2,14 @@
 
 // This file resolves the assets available from our client bundle.
 
-import fs from 'fs';
-import path from 'path';
-import appRoot from 'app-root-dir';
-import { notEmpty } from '../shared/universal/utils/guards';
+import fs from 'fs'
+import metafile from '../metafile'
 
-const appRootPath = appRoot.get();
+const {assetsPath} = metafile.client
 
-const assetsBundleFilePath = path.resolve(
-  appRootPath,
-  notEmpty(process.env.BUNDLE_OUTPUT_PATH),
-  './client',
-  `./${notEmpty(process.env.BUNDLE_ASSETS_FILENAME)}`
-);
-
-if (!fs.existsSync(assetsBundleFilePath)) {
+if (!fs.existsSync(assetsPath)) {
   throw new Error(
-    `We could not find the "${assetsBundleFilePath}" file, which contains a ` +
+    `We could not find the "${assetsPath}" file, which contains a ` +
     'list of the assets of the client bundle.  Please ensure that the client ' +
     'bundle has been built before the server bundle and that the required ' +
     'environment variables are configured (BUNDLE_OUTPUT_PATH & ' +
@@ -26,9 +17,7 @@ if (!fs.existsSync(assetsBundleFilePath)) {
   );
 }
 
-const assetsJSON = JSON.parse(
-  fs.readFileSync(assetsBundleFilePath, 'utf8')
-);
+const assetsJSON = JSON.parse(fs.readFileSync(assetsPath, 'utf8'));
 
 /**
  * Retrieves the js/css for the given chunks that belong to our client bundle.
@@ -45,7 +34,7 @@ const assetsJSON = JSON.parse(
  */
 function getAssetsForClientChunks(chunks: Array<string>) {
   return chunks.reduce((acc, chunkName) => {
-    const chunkAssets = assetsJSON[chunkName];
+    const chunkAssets = assetsJSON.entry[chunkName];
     if (chunkAssets) {
       if (chunkAssets.js) {
         acc.js.push(chunkAssets.js);

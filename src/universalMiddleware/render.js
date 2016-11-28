@@ -4,6 +4,7 @@ import type { Head } from 'react-helmet';
 import serialize from 'serialize-javascript';
 import { STATE_IDENTIFIER } from 'code-split-component';
 import getAssetsForClientChunks from './getAssetsForClientChunks';
+import metafile from '../metafile'
 
 // We use the polyfill.io service which provides the polyfills that a
 // client needs, rather than everything if we used babel-polyfill.
@@ -52,12 +53,7 @@ function scriptTags(jsFilePaths : Array<string>) {
 // we need to inject the path to the vendor dll bundle below.
 // @see /tools/development/ensureVendorDLLExists.js
 function developmentVendorDLL() {
-  if (process.env.NODE_ENV === 'development') {
-    const vendorPaths = require('../../tools/config/vendorDLLPaths'); // eslint-disable-line global-require
-
-    return scriptTag(vendorPaths.dllWebPath);
-  }
-  return '';
+  return metafile.client.dll.scriptTag
 }
 
 type RenderArgs = {
