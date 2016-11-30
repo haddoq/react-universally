@@ -4,13 +4,13 @@ const appRootPath = require('app-root-dir').get();
 const flowRemoveTypes = require('flow-remove-types');
 const fs = require('fs');
 const rimraf = require('rimraf');
-const { exec } = require('../utils');
+const { exec, chalkInfo, chalkError } = require('../utils');
 
 function safeDelete(target, cb) {
   if (fs.existsSync(target)) {
     rimraf(target, (err) => {
       if (err) {
-        console.log('Failed to delete:', target);
+        console.log(chalkError('Failed to delete:', target));
       }
       if (cb) {
         cb();
@@ -32,7 +32,7 @@ const isJsFile = file => path.extname(file) === '.js';
 globSync(`${path.resolve(appRootPath, 'src')}/**/*.js`)
   .filter(isJsFile)
   .forEach((file) => {
-    console.log(`Removing types from "${file}`);
+    console.log(chalkInfo(`Removing types from "${file}`));
     const input = fs.readFileSync(file, 'utf8');
     const output =
       // Remove flow annotations

@@ -4,7 +4,7 @@ const md5 = require('md5');
 const fs = require('fs');
 const globSync = require('glob').sync;
 const matchRequire = require('match-require');
-const { createNotification } = require('../utils');
+const { createNotification, chalkInfo } = require('../utils');
 const config = require('../config');
 
 // -----------------------------------------------------------------------------
@@ -73,7 +73,7 @@ function buildVendorDLL() {
         level: 'info',
         message: 'Vendor DLL build complete. Check console for module list.',
       });
-      console.log(filteredModules);
+      console.log(chalkInfo(filteredModules));
 
       const webpackConfig = webpackConfigFactory(filteredModules);
       const vendorDLLCompiler = webpack(webpackConfig);

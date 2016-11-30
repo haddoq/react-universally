@@ -1,6 +1,6 @@
 const HappyPack = require('happypack');
 const notifier = require('node-notifier');
-const colors = require('colors');
+const chalk = require('chalk');
 const execSync = require('child_process').execSync;
 const appRootPath = require('app-root-dir').get();
 const path = require('path');
@@ -54,10 +54,10 @@ function createNotification(options = {}) {
   const msg = `==> ${title} -> ${options.message}`;
 
   switch (level) {
-    case 'warn': console.log(colors.red(msg)); break;
-    case 'error': console.log(colors.bgRed.white(msg)); break;
+    case 'warn': console.log(chalkWarning(msg)); break;
+    case 'error': console.log(chalkError(msg)); break;
     case 'info':
-    default: console.log(colors.green(msg));
+    default: console.log(chalkSuccess(msg));
   }
 }
 
@@ -106,6 +106,16 @@ function getEnvVars() {
     : process.env;
 }
 
+// Helpers wrapping Chalk colors to spare some typing.
+// Simply wrap the output you want colored in one of the
+// defined helpers.
+// console.log(chalkSuccess('Successful message'))
+const chalkError = chalk.bgRed.white;
+const chalkSuccess = chalk.green;
+const chalkWarning = chalk.yellow;
+const chalkProcessing = chalk.blue;
+const chalkInfo = chalk.cyan;
+
 module.exports = {
   removeEmpty,
   ifElse,
@@ -116,4 +126,9 @@ module.exports = {
   getFilename,
   ensureNotInClientBundle,
   getEnvVars,
+  chalkError,
+  chalkSuccess,
+  chalkWarning,
+  chalkProcessing,
+  chalkInfo,
 };
